@@ -5,9 +5,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.hisp.dhis.android.sdk.R;
 
-public class CoordinatePickerFragment extends Fragment {
+public class CoordinatePickerFragment extends Fragment implements OnMapReadyCallback {
+
+    private GoogleMap mMap;
+    private Marker marker;
 
     public static final String TAG = CoordinatePickerFragment.class.getSimpleName();
     @Override
@@ -26,6 +37,25 @@ public class CoordinatePickerFragment extends Fragment {
         //fragment's layout. You can return null if the fragment does not
         //provide a UI.
         View view = inflater.inflate(R.layout.fragment_coordinate_picker, container, false);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
         return view;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if (marker != null) marker.remove();
+                marker = mMap.addMarker(new MarkerOptions().position(latLng));
+            }
+        });
     }
 }
