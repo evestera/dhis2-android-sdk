@@ -44,8 +44,10 @@ import org.hisp.dhis.android.sdk.controllers.GpsController;
 import org.hisp.dhis.android.sdk.persistence.Dhis2Application;
 import org.hisp.dhis.android.sdk.persistence.models.DataValue;
 import org.hisp.dhis.android.sdk.persistence.models.Event;
+import org.hisp.dhis.android.sdk.ui.activities.INavigationHandler;
 import org.hisp.dhis.android.sdk.ui.adapters.rows.AbsTextWatcher;
 import org.hisp.dhis.android.sdk.ui.adapters.rows.events.OnDetailedInfoButtonClick;
+import org.hisp.dhis.android.sdk.ui.fragments.coordinatepicker.CoordinatePickerFragment;
 import org.hisp.dhis.android.sdk.ui.fragments.dataentry.RowValueChangedEvent;
 
 public final class CoordinatesRow extends Row {
@@ -235,9 +237,14 @@ public final class CoordinatesRow extends Row {
 
         @Override
         public void onClick(View v) {
-            Location location = GpsController.getLocation();
-            mLatitude.setText(String.valueOf(location.getLatitude()));
-            mLongitude.setText(String.valueOf(location.getLongitude()));
+
+            CoordinatePickerFragment coordinatePickerFragment = new CoordinatePickerFragment();
+            INavigationHandler navigation = (INavigationHandler) v.getContext();
+            navigation.switchFragment(coordinatePickerFragment, CoordinatePickerFragment.TAG, true);
+
+            //Location location = GpsController.getLocation();
+            //mLatitude.setText(String.valueOf(location.getLatitude()));
+            //mLongitude.setText(String.valueOf(location.getLongitude()));
         }
     }
 
