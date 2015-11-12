@@ -63,6 +63,7 @@ android {
 }
 
 dependencies {
+    compile 'com.android.support:multidex:1.0.0'
     // Android support libraries.
     compile 'com.android.support:appcompat-v7:22.1.0'
     compile 'com.android.support:cardview-v7:22.1.0'
