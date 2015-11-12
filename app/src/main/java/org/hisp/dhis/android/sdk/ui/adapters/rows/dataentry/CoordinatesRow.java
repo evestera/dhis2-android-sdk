@@ -237,14 +237,24 @@ public final class CoordinatesRow extends Row {
 
         @Override
         public void onClick(View v) {
+            Location location = GpsController.getLocation();
 
-            CoordinatePickerFragment coordinatePickerFragment = new CoordinatePickerFragment();
+            CoordinatePickerFragment.Callback callback = new CoordinatePickerFragment.Callback() {
+                @Override
+                public void saveLocation(double latitude, double longitude) {
+                    mLatitude.setText(String.valueOf(latitude));
+                    mLongitude.setText(String.valueOf(longitude));
+                }
+            };
+
+            Editable latString = mLatitude.getText();
+            double latDouble = latString != null && !latString.toString().equals("") ? Double.parseDouble(latString.toString()) : location.getLatitude();
+            Editable lonString = mLongitude.getText();
+            double lonDouble = lonString != null && !lonString.toString().equals("") ? Double.parseDouble(lonString.toString()) : location.getLatitude();
+
+            CoordinatePickerFragment coordinatePickerFragment = CoordinatePickerFragment.newInstance(latDouble, lonDouble, callback);
             INavigationHandler navigation = (INavigationHandler) v.getContext();
             navigation.switchFragment(coordinatePickerFragment, CoordinatePickerFragment.TAG, true);
-
-            //Location location = GpsController.getLocation();
-            //mLatitude.setText(String.valueOf(location.getLatitude()));
-            //mLongitude.setText(String.valueOf(location.getLongitude()));
         }
     }
 
