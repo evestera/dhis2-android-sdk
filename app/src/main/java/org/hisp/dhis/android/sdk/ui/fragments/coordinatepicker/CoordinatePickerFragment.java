@@ -1,7 +1,11 @@
 package org.hisp.dhis.android.sdk.ui.fragments.coordinatepicker;
 
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
@@ -14,6 +18,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.hisp.dhis.android.sdk.R;
+import org.hisp.dhis.android.sdk.ui.activities.INavigationHandler;
+import org.hisp.dhis.android.sdk.ui.fragments.dataentry.ValidationErrorDialog;
+
+import java.util.ArrayList;
 
 public class CoordinatePickerFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -44,12 +52,44 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
     @Override
     public void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // For onOptinsItemSelected to be called, hasOptinsMenue has to be true
+        setHasOptionsMenu(true);
+
         if (savedInstanceState != null) {
             initalLatitude = savedInstanceState.getDouble("latitude");
             initialLongitude = savedInstanceState.getDouble("longitude");
         } else {
             initalLatitude = getArguments().getDouble("latitude");
             initialLongitude = getArguments().getDouble("longitude");
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof AppCompatActivity) {
+            // TODO(Oyvind) We might need to revert these changes on detach.
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+            getActionBar().setHomeButtonEnabled(true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == android.R.id.home) {
+            getFragmentManager().popBackStack();
+            return true;
+        }
+        return super.onOptionsItemSelected(menuItem);
+    }
+
+    private ActionBar getActionBar() {
+        if (getActivity() != null &&
+                getActivity() instanceof AppCompatActivity) {
+            return ((AppCompatActivity) getActivity()).getSupportActionBar();
+        } else {
+            throw new IllegalArgumentException("Fragment should be attached to ActionBarActivity");
         }
     }
 
