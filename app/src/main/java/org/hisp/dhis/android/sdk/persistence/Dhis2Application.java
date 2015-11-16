@@ -30,7 +30,6 @@ package org.hisp.dhis.android.sdk.persistence;
 
 import android.app.Activity;
 import android.app.Application;
-import android.support.multidex.MultiDexApplication;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.squareup.otto.Bus;
@@ -42,7 +41,7 @@ import org.hisp.dhis.android.sdk.utils.MainThreadBus;
 /**
  *  Application for initiating the DbFlow Back end
  */
-public abstract class Dhis2Application extends MultiDexApplication {
+public abstract class Dhis2Application extends Application {
 
     public static Bus bus;
     public static DhisController dhisController;
