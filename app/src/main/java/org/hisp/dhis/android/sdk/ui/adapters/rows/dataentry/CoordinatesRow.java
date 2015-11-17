@@ -250,7 +250,7 @@ public final class CoordinatesRow extends Row {
             Editable latString = mLatitude.getText();
             double latDouble = latString != null && !latString.toString().equals("") ? Double.parseDouble(latString.toString()) : location.getLatitude();
             Editable lonString = mLongitude.getText();
-            double lonDouble = lonString != null && !lonString.toString().equals("") ? Double.parseDouble(lonString.toString()) : location.getLatitude();
+            double lonDouble = lonString != null && !lonString.toString().equals("") ? Double.parseDouble(lonString.toString()) : location.getLongitude();
 
             CoordinatePickerFragment coordinatePickerFragment = CoordinatePickerFragment.newInstance(latDouble, lonDouble, callback);
             INavigationHandler navigation = (INavigationHandler) v.getContext();
