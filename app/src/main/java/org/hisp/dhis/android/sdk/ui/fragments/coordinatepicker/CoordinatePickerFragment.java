@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
+import android.widget.Button;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -104,6 +105,29 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_coordinate_picker, container, false);
+        Button okButton = (Button) view.findViewById(R.id.ok_button);
+        Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (marker == null) {
+                    return;
+                }
+                LatLng location = marker.getPosition();
+                callback.saveLocation(location.latitude, location.longitude);
+
+                getFragmentManager().popBackStack();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                getFragmentManager().popBackStack();
+            }
+        });
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         return view;
@@ -126,7 +150,6 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
             public void onMapClick(LatLng latLng) {
                 if (marker != null) marker.remove();
                 marker = mMap.addMarker(new MarkerOptions().position(latLng));
-                callback.saveLocation(latLng.latitude, latLng.longitude);
             }
         });
     }
