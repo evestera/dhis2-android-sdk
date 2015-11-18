@@ -54,7 +54,7 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
     public void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // For onOptinsItemSelected to be called, hasOptinsMenue has to be true
+        // For onOptionsItemSelected to be called, hasOptionsMenu has to be true
         setHasOptionsMenu(true);
 
         if (savedInstanceState != null) {
