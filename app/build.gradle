@@ -68,7 +68,8 @@ dependencies {
     compile 'com.android.support:cardview-v7:22.1.0'
     compile 'com.android.support:design:22.2.0'
     // Google Play Services
-    compile 'com.google.android.gms:play-services:8.1.0'
+    compile 'com.google.android.gms:play-services-base:8.1.0'
+    compile 'com.google.android.gms:play-services-maps:8.1.0'
     // Square libraries.
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
