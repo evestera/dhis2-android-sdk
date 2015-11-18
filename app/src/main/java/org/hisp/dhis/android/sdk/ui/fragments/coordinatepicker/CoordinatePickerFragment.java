@@ -28,7 +28,7 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
     private GoogleMap mMap;
     private Marker marker;
     private Callback callback;
-    private double initalLatitude;
+    private double initialLatitude;
     private double initialLongitude;
     public static final String TAG = CoordinatePickerFragment.class.getSimpleName();
 
@@ -58,10 +58,10 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
         setHasOptionsMenu(true);
 
         if (savedInstanceState != null) {
-            initalLatitude = savedInstanceState.getDouble("latitude");
+            initialLatitude = savedInstanceState.getDouble("latitude");
             initialLongitude = savedInstanceState.getDouble("longitude");
         } else {
-            initalLatitude = getArguments().getDouble("latitude");
+            initialLatitude = getArguments().getDouble("latitude");
             initialLongitude = getArguments().getDouble("longitude");
         }
     }
@@ -141,8 +141,8 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
-        if (initalLatitude != 0.0 || initialLongitude != 0.0) {
-            marker = mMap.addMarker(new MarkerOptions().position(new LatLng(initalLatitude, initialLongitude)));
+        if (initialLatitude != 0.0 || initialLongitude != 0.0) {
+            marker = mMap.addMarker(new MarkerOptions().position(new LatLng(initialLatitude, initialLongitude)));
         }
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
