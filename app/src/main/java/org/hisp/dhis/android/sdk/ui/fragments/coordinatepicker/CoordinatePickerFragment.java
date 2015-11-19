@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.widget.Button;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -137,6 +138,7 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
 
         if (initialLatitude != 0.0 || initialLongitude != 0.0) {
             marker = mMap.addMarker(new MarkerOptions().position(new LatLng(initialLatitude, initialLongitude)));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 11));
         }
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
