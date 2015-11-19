@@ -69,28 +69,22 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof AppCompatActivity) {
-            // TODO(Oyvind) We might need to revert these changes on detach.
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-            getActionBar().setHomeButtonEnabled(true);
-        }
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) actionBar.hide();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == android.R.id.home) {
-            getFragmentManager().popBackStack();
-            return true;
-        }
-        return super.onOptionsItemSelected(menuItem);
+    public void onDetach() {
+        super.onDetach();
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) actionBar.show();
     }
 
     private ActionBar getActionBar() {
-        if (getActivity() != null &&
-                getActivity() instanceof AppCompatActivity) {
+        if (getActivity() != null && getActivity() instanceof AppCompatActivity) {
             return ((AppCompatActivity) getActivity()).getSupportActionBar();
         } else {
-            throw new IllegalArgumentException("Fragment should be attached to ActionBarActivity");
+            return null;
         }
     }
 
