@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
@@ -22,11 +21,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.hisp.dhis.android.sdk.R;
 import org.hisp.dhis.android.sdk.controllers.GpsController;
-import org.hisp.dhis.android.sdk.ui.activities.INavigationHandler;
-import org.hisp.dhis.android.sdk.ui.fragments.dataentry.ValidationErrorDialog;
-import org.hisp.dhis.android.sdk.utils.i18n.LocaleManager;
-
-import java.util.ArrayList;
 
 public class CoordinatePickerFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -153,6 +147,13 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
         });
 
         mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            /**
+             * This listener is invoked when pressing the location button at the top right of the
+             * screen in the Google Maps display. This method removes the previous marker and
+             * created at new at the users locations by using GpsController.getLocation(). After the
+             * marker variable has been updated the user receives a toast informing the user that the
+             * location will be saved when saved is pressed (even if the map is not shown).
+             */
             @Override
             public boolean onMyLocationButtonClick() {
                 if (marker != null) marker.remove();
