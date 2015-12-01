@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,8 +21,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.hisp.dhis.android.sdk.R;
+import org.hisp.dhis.android.sdk.controllers.GpsController;
 import org.hisp.dhis.android.sdk.ui.activities.INavigationHandler;
 import org.hisp.dhis.android.sdk.ui.fragments.dataentry.ValidationErrorDialog;
+import org.hisp.dhis.android.sdk.utils.i18n.LocaleManager;
 
 import java.util.ArrayList;
 
@@ -146,6 +149,21 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
             public void onMapClick(LatLng latLng) {
                 if (marker != null) marker.remove();
                 marker = mMap.addMarker(new MarkerOptions().position(latLng));
+            }
+        });
+
+        mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                if (marker != null) marker.remove();
+                marker = mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(GpsController.getLocation().getLatitude(),
+                                GpsController.getLocation().getLongitude())));
+                Toast.makeText(
+                        getActivity(),
+                        "Your coordinates selected. Click Ok to save.",
+                        Toast.LENGTH_LONG).show();
+                return true;
             }
         });
     }
