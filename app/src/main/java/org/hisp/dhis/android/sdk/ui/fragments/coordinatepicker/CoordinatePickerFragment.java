@@ -161,6 +161,9 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
                         getActivity(),
                         "Your coordinates selected. Click Ok to save.",
                         Toast.LENGTH_LONG).show();
+
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+
                 return true;
             }
         });
