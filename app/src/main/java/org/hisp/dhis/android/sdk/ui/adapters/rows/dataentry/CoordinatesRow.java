@@ -110,10 +110,13 @@ public final class CoordinatesRow extends Row {
         private final EditText latitude;
         private final EditText longitude;
         private final ImageButton captureCoords;
+        private final ImageButton openMap;
         private final View detailedInfoButton;
         private final LatitudeWatcher latitudeWatcher;
         private final LongitudeWatcher longitudeWatcher;
-        private final OnCaptureCoordsClickListener onButtonClickListener;
+        private final OnCaptureCoordsClickListener onCoordsButtonClickListener;
+        private final OnOpenMapClickListener onMapButtonClickListener;
+
 
         public CoordinateViewHolder(View view, View detailedInfoButton) {
             final String latitudeMessage = view.getContext()
@@ -125,16 +128,19 @@ public final class CoordinatesRow extends Row {
             latitude = (EditText) view.findViewById(R.id.latitude_edittext);
             longitude = (EditText) view.findViewById(R.id.longitude_edittext);
             captureCoords = (ImageButton) view.findViewById(R.id.capture_coordinates);
+            openMap = (ImageButton) view.findViewById(R.id.open_map);
             this.detailedInfoButton = detailedInfoButton;
 
             /* text watchers and click listener */
             latitudeWatcher = new LatitudeWatcher(latitude, latitudeMessage);
             longitudeWatcher = new LongitudeWatcher(longitude, longitudeMessage);
-            onButtonClickListener = new OnCaptureCoordsClickListener(latitude, longitude);
+            onCoordsButtonClickListener = new OnCaptureCoordsClickListener(latitude, longitude);
+            onMapButtonClickListener = new OnOpenMapClickListener(latitude, longitude);
 
             latitude.addTextChangedListener(latitudeWatcher);
             longitude.addTextChangedListener(longitudeWatcher);
-            captureCoords.setOnClickListener(onButtonClickListener);
+            captureCoords.setOnClickListener(onCoordsButtonClickListener);
+            openMap.setOnClickListener(onMapButtonClickListener);
         }
 
         public void updateViews(Event event) {
@@ -231,6 +237,23 @@ public final class CoordinatesRow extends Row {
         private final EditText mLongitude;
 
         public OnCaptureCoordsClickListener(EditText latitude, EditText longitude) {
+            mLatitude = latitude;
+            mLongitude = longitude;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Location location = GpsController.getLocation();
+            mLatitude.setText(String.valueOf(location.getLatitude()));
+            mLongitude.setText(String.valueOf(location.getLongitude()));
+        }
+    }
+
+    private static class OnOpenMapClickListener implements View.OnClickListener {
+        private final EditText mLatitude;
+        private final EditText mLongitude;
+
+        public OnOpenMapClickListener(EditText latitude, EditText longitude) {
             mLatitude = latitude;
             mLongitude = longitude;
         }
