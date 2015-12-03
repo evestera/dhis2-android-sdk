@@ -131,7 +131,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/transparent_selector"
             android:contentDescription="@string/description"
-            android:src="@drawable/ic_dashboard"/>
+            android:src="@drawable/ic_map"/>
     </LinearLayout>
 
 </LinearLayout>
