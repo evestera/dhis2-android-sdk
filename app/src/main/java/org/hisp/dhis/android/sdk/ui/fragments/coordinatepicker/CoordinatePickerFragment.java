@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,7 +32,9 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
 
     /**
      * Factory method for constructing a new instance of the CoordinatePickerFragment.
-     * Initial/previous latitude and longitude needs to be specified.
+     * @param latitude The initial latitude
+     * @param longitude The initial longitude
+     * @param callback The Callback reference
      */
     public static CoordinatePickerFragment newInstance(double latitude, double longitude, Callback callback) {
         CoordinatePickerFragment fragment =  new CoordinatePickerFragment();
@@ -71,14 +72,11 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
         }
     }
 
-    /**
-     * The next to methods makes sure the Actionbar is hidden during the duration of the map
-     * presentation.
-     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         ActionBar actionBar = getActionBar();
+        // Hide actionbar when entering the CoordinatePickerFragment
         if (actionBar != null) actionBar.hide();
     }
 
@@ -86,9 +84,15 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
     public void onDetach() {
         super.onDetach();
         ActionBar actionBar = getActionBar();
+        // Show the actionbar when exiting the CoordinatePickerFragment
         if (actionBar != null) actionBar.show();
     }
 
+    /**
+     * Getter function that is used by onAttach and onDetach for hiding or showing the
+     * Actionbar
+     * @return The Actionbar object or null
+     */
     private ActionBar getActionBar() {
         if (getActivity() != null && getActivity() instanceof AppCompatActivity) {
             return ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -116,6 +120,8 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
         Button okButton = (Button) view.findViewById(R.id.ok_button);
         Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
 
+        // When the user clicks the OK-button and a marker is present. The latitude and longitude
+        // of that marker is returned (i.e added to the callback) and the fragment exits.
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,6 +135,8 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
             }
         });
 
+        // When the user clicks the cancel button the fragment exits without saving/returning
+        // the selected coordinates
         cancelButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -149,16 +157,19 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.setMyLocationEnabled(true); //Enables use of GPS for showing/selecting my location
+        mMap.getUiSettings().setMyLocationButtonEnabled(true); //Show the my location button
+        mMap.getUiSettings().setZoomControlsEnabled(true); // Enable zoom
+        mMap.getUiSettings().setMapToolbarEnabled(false); // Disable map toolbar
 
+        // Adds a marker for the previously saved coordinates. If there are no previous coordinates
+        // saved (i.e lat = 0.0 and long = 0.0) no marker is saved.
         if (initialLatitude != 0.0 || initialLongitude != 0.0) {
             marker = mMap.addMarker(new MarkerOptions().position(new LatLng(initialLatitude, initialLongitude)));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 11));
         }
 
+        // Listener that places a marker when the user clicks on the map
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -167,27 +178,19 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
             }
         });
 
+         /* This listener is invoked when pressing the location button at the top right of the
+         * screen in the Google Maps display. This method removes the previous marker and
+         * created at new at the users locations by using GpsController.getLocation(). After the
+         * marker variable has been updated the user receives a toast informing the user that the
+         * location will be saved when saved is pressed (even if the map is not shown).*/
         mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-            /**
-             * This listener is invoked when pressing the location button at the top right of the
-             * screen in the Google Maps display. This method removes the previous marker and
-             * created at new at the users locations by using GpsController.getLocation(). After the
-             * marker variable has been updated the user receives a toast informing the user that the
-             * location will be saved when saved is pressed (even if the map is not shown).
-             */
             @Override
             public boolean onMyLocationButtonClick() {
                 if (marker != null) marker.remove();
                 marker = mMap.addMarker(new MarkerOptions()
                         .position(new LatLng(GpsController.getLocation().getLatitude(),
                                 GpsController.getLocation().getLongitude())));
-                Toast.makeText(
-                        getActivity(),
-                        "Your coordinates selected. Click Ok to save.",
-                        Toast.LENGTH_LONG).show();
-
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
-
                 return true;
             }
         });
