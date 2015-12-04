@@ -23,11 +23,12 @@ import org.hisp.dhis.android.sdk.R;
 import org.hisp.dhis.android.sdk.controllers.GpsController;
 
 public class CoordinatePickerFragment extends Fragment implements OnMapReadyCallback {
-    private GoogleMap mMap;
-    private Marker marker;
-    private Callback callback;
-    private double initialLatitude;
-    private double initialLongitude;
+    private GoogleMap mMap; // The Google Map object
+    private Marker marker; // The marker shown in the map view
+    private Callback callback; // The object that handles the callback from the map to the listview
+                                // Carrying the selected coordinates through saveLocation
+    private double initialLatitude; // The previous latitude
+    private double initialLongitude; // The previous longitude
     public static final String TAG = CoordinatePickerFragment.class.getSimpleName();
 
     public static CoordinatePickerFragment newInstance(double latitude, double longitude, Callback callback) {
