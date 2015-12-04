@@ -31,6 +31,10 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
     private double initialLongitude; // The previous longitude
     public static final String TAG = CoordinatePickerFragment.class.getSimpleName();
 
+    /**
+     * Factory method for constructing a new instance of the CoordinatePickerFragment.
+     * Initial/previous latitude and longitude needs to be specified.
+     */
     public static CoordinatePickerFragment newInstance(double latitude, double longitude, Callback callback) {
         CoordinatePickerFragment fragment =  new CoordinatePickerFragment();
         fragment.setCallback(callback);
@@ -49,6 +53,11 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
         void saveLocation(double latitude, double longitude);
     }
 
+    /**
+     * When a new instance of CoordinatePickerFragment is created using the newInstance method
+     * onCreate is called, reading the latitude and longitude that were bundled in the object.
+     * These values are then assign to the corresponding class/instance variables of that instance.
+     */
     @Override
     public void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +71,10 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
         }
     }
 
+    /**
+     * The next to methods makes sure the Actionbar is hidden during the duration of the map
+     * presentation.
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -92,6 +105,11 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
         outState.putDouble("longitude", marker != null ? marker.getPosition().longitude : 0);
     }
 
+    /**
+     * This method handles setup procedures of the view by defining the OK- and cancel buttons as
+     * well as their listeners. These serves as an overlay to the Map-view itself and dictates
+     * the logic that is performed when exiting the map view.
+     */
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_coordinate_picker, container, false);
@@ -107,7 +125,7 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
                 LatLng location = marker.getPosition();
                 callback.saveLocation(location.latitude, location.longitude);
 
-                getFragmentManager().popBackStack();
+                getFragmentManager().popBackStack(); // Go to previous fragment i.e the listview.
             }
         });
 
@@ -123,6 +141,11 @@ public class CoordinatePickerFragment extends Fragment implements OnMapReadyCall
         return view;
     }
 
+    /**
+     * This method implements the Google Map functionality i.e mostly defining properties and
+     * listeners for the various actions.
+     * @param googleMap: The Google Map Object specific to the CoordinatePickerFragment instance
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
